@@ -1,0 +1,17 @@
+@import 'tailwindcss';
+
+@theme inline {
+  --color-background: var(--background);
+  --color-primary: var(--primary);
+  --color-secondary: var(--secondary);
+  --color-tertiary: var(--tertiary);
+}
+
+@layer base {
+  .root {
+    --background: #121212;
+    --primary: #0e4eb2;
+    --secondary: #2078cf;
+    --tertiary: #011f65;
+  }
+}

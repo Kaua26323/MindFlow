@@ -1,0 +1,53 @@
+{
+  "name": "mindflow",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "directories": {
+    "doc": "docs"
+  },
+  "scripts": {
+    "dev": "tsx watch src/server.ts",
+    "dev:css": "tailwindcss -i ./src/web/public/css/style.css -o ./src/web/public/css/output.css --watch"
+  },
+  "keywords": [],
+  "author": "Kauã Souza",
+  "license": "MIT",
+  "type": "module",
+  "devDependencies": {
+    "@eslint/js": "^10.0.1",
+    "@tailwindcss/cli": "^4.2.4",
+    "@types/connect-pg-simple": "^7.0.3",
+    "@types/express": "^5.0.6",
+    "@types/express-flash": "^0.0.5",
+    "@types/express-session": "^1.19.0",
+    "@types/pg": "^8.20.0",
+    "@types/supertest": "^7.2.0",
+    "autoprefixer": "^10.5.0",
+    "dotenv": "^17.4.2",
+    "drizzle-kit": "^0.31.10",
+    "eslint": "^10.2.1",
+    "eslint-config-prettier": "^10.1.8",
+    "eslint-plugin-prettier": "^5.5.5",
+    "eslint-plugin-tailwindcss": "^3.18.3",
+    "postcss": "^8.5.12",
+    "prettier": "^3.8.3",
+    "supertest": "^7.2.2",
+    "tailwindcss": "^4.2.4",
+    "tsx": "^4.21.0",
+    "typescript": "^6.0.3",
+    "typescript-eslint": "^8.59.0"
+  },
+  "dependencies": {
+    "argon2": "^0.44.0",
+    "connect-pg-simple": "^10.0.0",
+    "drizzle-orm": "^0.45.2",
+    "express": "^5.2.1",
+    "express-flash": "^0.0.2",
+    "express-handlebars": "^9.0.1",
+    "express-session": "^1.19.0",
+    "pg": "^8.20.0",
+    "vite-tsconfig-paths": "^6.1.1",
+    "vitest": "^4.1.5"
+  }
+}
