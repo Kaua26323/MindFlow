@@ -1,15 +1,14 @@
-import 'dotenv/config';
-import path from 'path';
 import { defineConfig } from 'drizzle-kit';
+import { getFullEnv } from '@/env/configs.ts';
 
-const drizzleSchemaPath = path.join('src/infra/db/drizzle/schemas/schema.ts');
-const drizzleMigrationsFolder = path.join('src/infra/db/drizzle/migrations');
+const { DATABASE_URL, drizzleSchemaFiles, drizzleMigrationsFolder } =
+  getFullEnv();
 
 export default defineConfig({
   dialect: 'postgresql',
-  schema: drizzleSchemaPath,
+  schema: drizzleSchemaFiles,
   out: drizzleMigrationsFolder,
   dbCredentials: {
-    url: process.env.DATABASE_URL as string,
+    url: DATABASE_URL,
   },
 });

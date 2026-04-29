@@ -5,14 +5,16 @@ import path from 'path';
 export default defineConfig({
   plugins: [tsconfigPaths()],
   test: {
-    globals: true, // Permite usar 'describe', 'it', 'expect' sem importar
+    globals: true,
     environment: 'node',
-    include: ['src/**/*.spec.ts', 'tests/**/*.spec.ts'], // Onde o Vitest buscará os testes
+    include: ['src/**/*.spec.ts', 'tests/**/*.spec.ts'],
     coverage: {
       provider: 'v8',
       reporter: ['text', 'json', 'html'],
     },
+    fileParallelism: false,
   },
+
   resolve: {
     alias: {
       '@': path.resolve(__dirname, 'src'),

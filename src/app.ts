@@ -1,11 +1,10 @@
-import 'dotenv/config';
 import path from 'path';
 import express from 'express';
 import flash from 'express-flash';
 import { engine } from 'express-handlebars';
 import type { NextFunction, Request, Response } from 'express';
 
-import { db, pool } from './infra/db/drizzle/connection.ts';
+import { drizzleDatabase } from '@/infra/db/drizzle/connection.ts';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 
@@ -15,7 +14,7 @@ const PostgresStore = connectPgSimple(session);
 app.use(
   session({
     store: new PostgresStore({
-      pool: pool,
+      pool: drizzleDatabase.pool,
       tableName: 'session',
     }),
     secret: process.env.SESSION_SECRET as string,
@@ -41,11 +40,10 @@ app.set('view engine', 'handlebars');
 app.set('views', path.resolve('src/web/views'));
 
 app.get('/', async (req, res: Response) => {
-  const users = await db.query.usersTable.findMany();
+  const users = await drizzleDatabase.db.query.usersTable.findMany();
   console.log(users);
   res.render('home.handlebars');
 });
-//feat(db): setup drizzle orm and initial schemas
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof Error) {

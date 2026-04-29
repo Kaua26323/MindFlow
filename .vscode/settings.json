@@ -3,5 +3,8 @@
     "source.fixAll.eslint": "explicit"
   },
   "editor.formatOnSave": false,
-  "eslint.validate": ["typescript", "javascript", "html"]
+  "eslint.validate": ["typescript", "javascript", "html"],
+  "code-runner.executorMap": {
+    "typescript": "npx dotenv -e .env.development -- tsx"
+  }
 }
