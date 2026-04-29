@@ -5,14 +5,12 @@ import flash from 'express-flash';
 import { engine } from 'express-handlebars';
 import type { NextFunction, Request, Response } from 'express';
 
-import { Pool } from 'pg';
+import { db, pool } from './infra/db/drizzle/connection.ts';
 import session from 'express-session';
 import connectPgSimple from 'connect-pg-simple';
 
 const app = express();
-
 const PostgresStore = connectPgSimple(session);
-const pool = new Pool({ connectionString: process.env.DATABASE_URL });
 
 app.use(
   session({
@@ -42,9 +40,12 @@ app.engine('handlebars', engine());
 app.set('view engine', 'handlebars');
 app.set('views', path.resolve('src/web/views'));
 
-app.get('/', (req, res: Response) => {
+app.get('/', async (req, res: Response) => {
+  const users = await db.query.usersTable.findMany();
+  console.log(users);
   res.render('home.handlebars');
 });
+//feat(db): setup drizzle orm and initial schemas
 
 app.use((err: unknown, req: Request, res: Response, next: NextFunction) => {
   if (err instanceof Error) {
