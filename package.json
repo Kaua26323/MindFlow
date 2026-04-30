@@ -7,7 +7,7 @@
     "doc": "docs"
   },
   "scripts": {
-    "dev": "dotenv -e env.development -- tsx watch src/server.ts",
+    "dev": "dotenv -e .env.development -- tsx watch src/server.ts",
     "dev:css": "tailwindcss -i ./src/web/public/css/style.css -o ./src/web/public/css/output.css --watch",
     "drizzle:generate": "dotenv -e .env.development -- drizzle-kit generate",
     "drizzle:migrate:dev": "dotenv -e .env.development -- drizzle-kit migrate",
