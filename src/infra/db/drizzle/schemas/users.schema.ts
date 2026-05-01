@@ -1,3 +1,4 @@
+import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 import {
   pgTable,
   uuid,
@@ -17,7 +18,10 @@ export const usersTable = pgTable('users', {
   updatedAt: timestamp('updated_at'),
 });
 
-// onnect-pg-simple table configuration
+export type User = InferSelectModel<typeof usersTable>;
+export type NewUser = InferInsertModel<typeof usersTable>;
+
+// Connect-pg-simple table configuration
 export const sessionsTable = pgTable(
   'session',
   {
