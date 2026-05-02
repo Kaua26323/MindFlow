@@ -1,5 +1,6 @@
 import { usersTable } from './users.schema.ts';
 import { pgTable, uuid, text, timestamp } from 'drizzle-orm/pg-core';
+import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
 
 export const postsTable = pgTable('posts', {
   id: uuid('id').primaryKey().defaultRandom(),
@@ -12,3 +13,6 @@ export const postsTable = pgTable('posts', {
   createdAt: timestamp('created_at').notNull().defaultNow(),
   updated_at: timestamp('updated_at'),
 });
+
+export type Post = InferSelectModel<typeof postsTable>;
+export type NewPost = InferInsertModel<typeof postsTable>;
