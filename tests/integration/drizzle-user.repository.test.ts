@@ -1,14 +1,14 @@
+import { makeRepositoryHarness } from '../utils/makeRepositoryHarness.ts';
 import type { NewUser } from '@/infra/db/drizzle/schemas/users.schema.ts';
-import { makeUserRepository } from '../utils/makeUserRepository.ts';
 
 describe('DrizzleUserRepository (integration)', () => {
-  const { repository, cleanUsersTable } = makeUserRepository();
+  const { userRepository, clean } = makeRepositoryHarness();
 
   beforeEach(async () => {
-    await cleanUsersTable();
+    await clean(['users']);
   });
   afterAll(async () => {
-    await cleanUsersTable();
+    await clean(['users']);
   });
 
   const userData: NewUser = {
@@ -19,7 +19,7 @@ describe('DrizzleUserRepository (integration)', () => {
 
   describe('create', () => {
     it('should successfully create and return a new user', async () => {
-      const results = await repository.create(userData);
+      const results = await userRepository.create(userData);
       expect(results).not.toBeNull();
       expect(results?.id).toBeDefined();
       expect(results?.email).toBe(userData.email);
@@ -28,27 +28,27 @@ describe('DrizzleUserRepository (integration)', () => {
     });
 
     it('should fail when creating a user with a duplicate email', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
       await expect(
-        repository.create({ ...userData, name: 'Other name' }),
+        userRepository.create({ ...userData, name: 'Other name' }),
       ).rejects.toThrow();
     });
 
     it('should fail when creating a user with a duplicate name', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
       await expect(
-        repository.create({ ...userData, email: 'other123@gmail.com' }),
+        userRepository.create({ ...userData, email: 'other123@gmail.com' }),
       ).rejects.toThrow();
     });
   });
 
   describe('findByEmail', () => {
     it('should return the user object if it exists', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
-      const results = await repository.findByEmail(userData.email);
+      const results = await userRepository.findByEmail(userData.email);
       expect(results).not.toBeNull();
       expect(results?.id).toBeDefined();
       expect(results?.email).toBe(userData.email);
@@ -57,18 +57,18 @@ describe('DrizzleUserRepository (integration)', () => {
     });
 
     it('should return "null" if the user doesn"t exist', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
-      const results = await repository.findByEmail('otheremail@gmail.com');
+      const results = await userRepository.findByEmail('otheremail@gmail.com');
       expect(results).toBeNull();
     });
   });
 
   describe('findByName', () => {
     it('should return the user object if it exists', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
-      const results = await repository.findByName(userData.name);
+      const results = await userRepository.findByName(userData.name);
       expect(results).not.toBeNull();
       expect(results?.id).toBeDefined();
       expect(results?.email).toBe(userData.email);
@@ -77,26 +77,26 @@ describe('DrizzleUserRepository (integration)', () => {
     });
 
     it('should return "null" if the user doesn"t exist', async () => {
-      await repository.create(userData);
+      await userRepository.create(userData);
 
-      const results = await repository.findByName('Other Name');
+      const results = await userRepository.findByName('Other Name');
       expect(results).toBeNull();
     });
   });
 
   describe('remove', () => {
     it('should return the deleted user data and remove it from DB', async () => {
-      const user = await repository.create(userData);
+      const user = await userRepository.create(userData);
 
       expect(user?.id).toBeDefined();
 
-      const deletedUser = await repository.remove(user!.id);
+      const deletedUser = await userRepository.remove(user!.id);
       expect(deletedUser?.id).toBe(user?.id);
 
       expect(deletedUser).not.toBeNull();
       expect(deletedUser?.id).toBe(user?.id);
 
-      const findInDb = await repository.findByEmail(userData.email);
+      const findInDb = await userRepository.findByEmail(userData.email);
       expect(findInDb).toBeNull();
     });
   });

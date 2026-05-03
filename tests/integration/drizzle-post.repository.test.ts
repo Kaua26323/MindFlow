@@ -1,12 +1,12 @@
-import { makePostRepository } from '../utils/makePostRepository.ts';
+import { makeRepositoryHarness } from '../utils/makeRepositoryHarness.ts';
 import type { NewPost } from '@/infra/db/drizzle/schemas/posts.schema.ts';
 
 describe('DrizzlePostRepository (integration)', () => {
-  const { userRepository, postRepository, cleanTables } = makePostRepository();
+  const { userRepository, postRepository, clean } = makeRepositoryHarness();
   let testUserId: string;
 
   beforeEach(async () => {
-    await cleanTables();
+    await clean(['users', 'posts']);
     const user = await userRepository.create({
       name: 'tests',
       email: 'test@gmail.com',
@@ -17,7 +17,7 @@ describe('DrizzlePostRepository (integration)', () => {
   });
 
   afterAll(async () => {
-    await cleanTables();
+    await clean(['users', 'posts']);
   });
 
   const getPostData = (id: string): NewPost => ({
@@ -37,6 +37,7 @@ describe('DrizzlePostRepository (integration)', () => {
       expect(result?.createdAt).toBeInstanceOf(Date);
     });
   });
+
   describe('getAll', () => {
     it('should return an array of posts ordered by most recent', async () => {
       await postRepository.create(getPostData(testUserId));
