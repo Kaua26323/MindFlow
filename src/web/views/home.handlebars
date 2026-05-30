@@ -1,3 +1,104 @@
-<h1 class="bg-blue-600">
-  Hello word
-</h1>
+<div class="flex flex-col w-full max-w-6xl mx-auto text-center px-6">
+  {{#if search}}
+    <h1 class="mb-6 text-2xl sm:text-3xl sm:mb-7">
+      You are searching for: <span class="text-primary">{{search}}</span>
+    </h1>
+    {{#if postQty}}
+      <p class="mb-4">
+        <span class="text-primary">{{postQty}}</span> post(s) found
+      </p>
+    {{else}}
+      <p class="mb-4">
+        No post found for the term <span class="text-primary">{{search}}</span>
+      </p>
+    {{/if}}
+  {{else}}
+    <h1 class="mb-6 text-2xl sm:text-3xl sm:mb-7">
+      Check out some of our <span class="text-primary">Posts</span>:
+    </h1>
+  {{/if}}
+
+  <form action="/" method="GET" class="w-full flex items-center justify-center gap-2 sm:gap-4 mb-5">
+    <input
+      type="text"
+      name="search"
+      placeholder="Are you looking for something?"
+      class="w-full bg-transparent border border-borderCard rounded-lg py-4 px-2 text-base sm:text-lg placeholder:text-white placeholder:text-center"
+    />
+    <button type="submit" class="bg-primary font-bold py-4.5 px-6 rounded-lg hover:bg-accent">
+      Search
+    </button>
+  </form>
+
+  <div class="flex flex-wrap sm:flex-nowrap justify-center items-center gap-3 mt-4 mb-8 mx-auto">
+    <span class="font-bold">Order by:</span>
+    <form action="/" method="GET" class="m-0">
+      <input type="hidden" name="search" value="{{this.search}}" />
+      <input type="hidden" name="order" value="new" />
+      <button
+        type="submit"
+        class="mx-2 border-none font-bold hover:text-accent flex items-center {{#if (compare order 'DESC')}} text-accent {{else}} text-white {{/if}}"
+      >
+        Newest
+      </button>
+    </form>
+    <form action="/" method="GET" class="m-0">
+      <input type="hidden" name="search" value="{{this.search}}" />
+      <input type="hidden" name="order" value="old" />
+      <button type="submit" class="mx-2 border-none font-bold  hover:text-accent flex items-center gap-1 {{#if (compare order 'ASC')}} text-accent {{else}} text-white {{/if}}">
+        Oldest
+      </button>
+    </form>
+    <a href="/" class="mx-2 text-white font-bold hover:text-accent">Clear</a>
+  </div>
+</div>
+
+<div class="w-full max-w-6xl mx-auto flex flex-col items-center px-6">
+  {{#if allPosts}}
+    {{#each allPosts}}
+      <figure class="w-full bg-background2 border border-borderCard hover:border-accent transition-colors duration-200 rounded p-4 mb-2.5">
+        <div class="w-full flex items-center justify-between gap-2">
+          <blockquote class="italic text-xl sm:text-2xl mb-1 overflow-hidden wrap-break-word">
+            {{this.text}}
+          </blockquote>
+          {{#if this.isFavorite}}
+            <a
+              href="/favorites"
+              class="text-yellow-300"
+              aria-label="View in Favorites"
+              title="View in Favorites"
+            >
+              {{> icons/star }}
+            </a>
+          {{else}}
+            <form action="/favorite/add" method="post" >
+              <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+              <input type="hidden" name="postID" value="{{this.id}}">
+              <button
+                type="submit"
+                class="hover:text-yellow-300"
+                aria-label="Add to favorites"
+                title="Add to favorites"
+              >
+                {{> icons/star }}
+              </button>
+            </form>
+          {{/if}}
+        </div>
+          <span class="w-full flex items-center justify-between gap-4 border-t border-primary py-1 mt-3">
+            <figcaption >by <span class="text-primary font-bold">{{this.userName}}</span></figcaption>
+            <figcaption>{{formatDate this.createdAt}}</figcaption>
+          </span>
+      </figure>
+    {{/each}}
+    {{> components/navigationBar pagination=pagination}}
+  {{else}}
+    <div class="w-full text-center py-20 bg-background2 rounded-sm border border-dashed border-border">
+      <div class="mx-auto mb-4 text-specialText text-5xl">!</div>
+      <p class="text-specialText text-lg">No posts to show.</p>
+      <a  href="/new-post" class="mt-4 text-primary font-bold hover:underline hover:text-accent">
+        Create your first post now.
+      </a>
+    </div>
+  {{/if}}
+</div>
