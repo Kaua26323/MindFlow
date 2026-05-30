@@ -1,0 +1,49 @@
+<div class="w-full bg-background2 flex items-center justify-between py-2 px-3 rounded">
+  {{#if pagination.hasPrev}}
+    <a
+      href="{{pagination.path}}?search={{search}}&order={{order}}&page={{pagination.prevPage}}"
+      class="px-4 py-2 bg-primary rounded hover:bg-accent"
+      aria-label="Previous page"
+      title="Previous page"
+    > 
+      {{> icons/chevronLeft}} 
+    </a>
+  {{else}}
+    <button disabled class="px-4 py-2 bg-gray-600 rounded text-gray-700 cursor-not-allowed">
+      {{> icons/chevronLeft}}
+    </button>
+  {{/if}}
+
+  <div class="flex gap-2">
+    {{#if pagination.pages.length}}
+      {{#each pagination.pages}}
+        <a
+          href="{{pagination.path}}?search={{../search}}&order={{../order}}&page={{this.page}}" 
+          class="px-3 py-1 rounded {{#if this.isCurrent}}bg-blue-600 text-white{{else}}bg-gray-200 text-black{{/if}}"
+          aria-label="Navigate to page {{this.page}}"
+          title="Navigate to page {{this.page}}"
+        >
+          {{this.page}}
+        </a>
+      {{/each}}
+    {{else}}
+      <p>No pages available.</p>
+    {{/if}}
+  </div>
+
+  {{#if pagination.hasNext}}
+    <a
+      href="{{pagination.path}}?search={{search}}&order={{order}}&page={{pagination.nextPage}}" 
+      class="px-4 py-2 bg-primary rounded hover:bg-accent"
+      aria-label="Next page"
+      title="Next page"
+    > 
+      {{> icons/chevronRight }}
+    </a>
+  {{else}}
+    <button disabled class="px-4 py-2 bg-gray-600 rounded text-gray-700 cursor-not-allowed">
+      {{> icons/chevronRight }}
+    </button>
+  {{/if}}
+  
+</div>
