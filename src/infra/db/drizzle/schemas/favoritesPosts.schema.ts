@@ -2,8 +2,6 @@ import { usersTable } from './users.schema.ts';
 import { postsTable } from './posts.schema.ts';
 import { pgTable, primaryKey, uuid, timestamp } from 'drizzle-orm/pg-core';
 
-import type { InferInsertModel, InferSelectModel } from 'drizzle-orm';
-
 export const favoritesPostsTable = pgTable(
   'favorites_posts',
   {
@@ -21,6 +19,3 @@ export const favoritesPostsTable = pgTable(
   },
   (table) => [primaryKey({ columns: [table.user_id, table.post_id] })],
 );
-
-export type FavoritePost = InferSelectModel<typeof favoritesPostsTable>;
-export type NewFavoritePost = InferInsertModel<typeof favoritesPostsTable>;
