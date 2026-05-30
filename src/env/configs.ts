@@ -11,17 +11,18 @@ const envSchema = z.object({
       { message: 'URL must be a valid PostgreSQL address' },
     ),
 
-  PORT: z.coerce.number().default(4000),
+  PORT: z.coerce.number().default(3000),
+  COOKIES_SECRET: z
+    .string()
+    .min(32, 'Cookies secret must be at least 32 characters long'),
   SESSION_SECRET: z
     .string()
-    .min(32, 'Secret must be at least 32 characters long'),
+    .min(32, 'Session secret must be at least 32 characters long'),
 });
 
 const _env = envSchema.safeParse(process.env);
 
 if (_env.success === false) {
-  console.error('Invalid environment variables:');
-  console.error(z.treeifyError(_env.error));
   throw new Error('Check the .env files and configurations.');
 }
 
