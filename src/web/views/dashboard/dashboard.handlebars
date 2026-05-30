@@ -1,0 +1,87 @@
+<div class="w-full py-4 px-6 max-w-6xl mx-auto">
+  {{#if search}}
+    <h1 class="mb-6 text-2xl sm:text-3xl sm:mb-7 text-center">
+      You are searching for: <span class="text-primary">{{search}}</span>
+    </h1>
+    {{#if postQty}}
+      <div class="flex flex-col items-center mb-6 gap-2">
+        <p>
+          <span class="text-primary">{{postQty}}</span> post(s) found
+        </p>
+        <a href="/dashboard" class="text-yellow-500 font-bold">Clear</a>
+      </div>
+    {{else}}
+      <div class="flex flex-col items-center mb-6 gap-2">
+        <p>
+          No post found for the term <span class="text-primary">{{search}}</span>
+        </p>
+        <a href="/dashboard" class="text-yellow-500 font-bold">Clear</a>
+      </div>
+    {{/if}}
+  {{/if}}
+
+  <div class="flex flex-col md:flex-row md:items-center justify-between gap-5 mb-8">
+    <div class="text-center md:text-start">
+      <h1 class="text-3xl font-bold mb-2">Dashboard</h1>
+      <p class="text-specialText">Manage your posts and ideas!</p>
+    </div>
+    
+    <a
+      href="/new-post" 
+      class="bg-primary flex items-center justify-center gap-2 px-3 py-4 rounded font-bold  hover:bg-accent"
+    >
+      New Post
+      {{> icons/badgePlus}}
+    </a>
+  </div>
+
+  <div class="flex flex-col md:flex-row md:items-center gap-1 mb-5">
+    <div class="w-full flex flex-col items-center justify-center px-2 py-3 rounded-sm border border-borderCard bg-background2 gap-1 md:flex-row md:max-w-36">
+      <p class="text-specialText text-xl">Total Posts</p>
+      <p class="text-3xl font-bold text-primary md:text-xl">{{totalPosts}}</p>
+    </div>
+    
+    <form action="/dashboard" class="relative w-full">
+      <div class="absolute inset-y-0 left-0 pl-4 flex items-center pointer-events-none text-specialText group-focus-within:text-primary transition-colors">
+        {{> icons/search }}
+      </div>
+      <input 
+        type="text"
+        name="search" 
+        placeholder="Search your posts..." 
+        class="w-full h-full pl-12 pr-4 py-4 border border-borderCard rounded placeholder-specialText focus:outline-none focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all"
+      />
+    </form>
+  </div>
+
+  <div class="space-y-4">
+    {{#if userPosts}}
+      {{#each userPosts}}
+        <div class="bg-background2 p-4 rounded  border border-borderCard  hover:border-accent transition-all shadow-sm">
+          <p class="text-specialText">{{formatDate this.createdAt}}</p>
+          <div class="flex items-center justify-between gap-4">
+            <div class="italic text-xl flex-1 overflow-hidden wrap-break-word">
+              {{this.text}}
+            </div>
+              <div class="flex items-center gap-4">
+                <a href="/edit-post/{{this.id}}" class="text-xl font-bold hover:text-accent">Edit</a>
+                <form action="/delete-post/{{this.id}}?_method=DELETE" method="post">
+                  <input type="hidden" name="_csrf" value="{{@root.csrfToken}}">
+                  <button type="submit" class="text-xl font-bold hover:text-redColor">Delete</button>
+                </form>
+              </div>
+          </div>
+        </div>
+      {{/each}}
+      {{> components/navigationBar pagination=pagination}}
+    {{else}}
+      <div class="text-center py-20 bg-background2 rounded-sm border border-dashed border-border">
+        <div class="mx-auto mb-4 text-specialText text-5xl">!</div>
+        <p class="text-specialText text-lg">No posts to show.</p>
+        <a  href="/new-post" class="mt-4 text-primary font-bold hover:underline hover:text-accent">
+          Create your first post now.
+        </a>
+      </div>
+    {{/if}}
+  </div>
+</div>
