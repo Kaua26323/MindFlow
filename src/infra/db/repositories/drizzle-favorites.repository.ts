@@ -1,12 +1,16 @@
-import { and, eq } from 'drizzle-orm';
+import { and, asc, count, desc, eq } from 'drizzle-orm';
+import { postsTable } from '../drizzle/schemas/posts.schema.ts';
 import { favoritesPostsTable } from '../drizzle/schemas/favoritesPosts.schema.ts';
 
 import type { DrizzleDatabase } from '../drizzle/connection.ts';
-import type { FavoritesPostsRepository } from '@/application/repositories/favorites.repository.ts';
 import type {
+  SearchParams,
   FavoritePost,
-  NewFavoritePost,
-} from '../drizzle/schemas/favoritesPosts.schema.ts';
+  FavoritePostDTO,
+  PaginatedFavorite,
+  FavoritesPostsRepository,
+} from '@/application/repositories/favorites.repository.ts';
+import type { Result } from '@/application/repositories/favorites.repository.ts';
 
 export class DrizzleFavoritesRepository implements FavoritesPostsRepository {
   private readonly db: DrizzleDatabase;
@@ -15,7 +19,7 @@ export class DrizzleFavoritesRepository implements FavoritesPostsRepository {
     this.db = db;
   }
 
-  async addPost(data: NewFavoritePost): Promise<FavoritePost | null> {
+  async addPost(data: FavoritePostDTO): Promise<FavoritePost | null> {
     const [savedPost] = await this.db
       .insert(favoritesPostsTable)
       .values(data)
@@ -25,15 +29,50 @@ export class DrizzleFavoritesRepository implements FavoritesPostsRepository {
     return savedPost || null;
   }
 
-  async getFavoritesPosts(userID: string): Promise<FavoritePost[] | []> {
-    const favorites = await this.db.query.favoritesPostsTable.findMany({
-      where: (item, { eq }) => eq(item.user_id, userID),
-    });
+  async getFavoritesPosts(
+    userID: string,
+    data: SearchParams,
+  ): Promise<PaginatedFavorite<Result>> {
+    const { page, order } = data;
+    const limit = 10;
+    const offset = (page - 1) * limit;
 
-    return favorites ?? [];
+    const whereCondition = eq(favoritesPostsTable.user_id, userID);
+
+    const querry = this.db
+      .select({
+        user_id: favoritesPostsTable.user_id,
+        post_id: postsTable.id,
+        text: postsTable.text,
+        createdAt: favoritesPostsTable.createdAt,
+      })
+      .from(favoritesPostsTable)
+      .innerJoin(postsTable, eq(favoritesPostsTable.post_id, postsTable.id))
+      .$dynamic();
+
+    const queryCount = this.db
+      .select({ total: count() })
+      .from(favoritesPostsTable)
+      .where(whereCondition);
+
+    const [dataResult, countResult] = await Promise.all([
+      querry
+        .where(whereCondition)
+        .orderBy(
+          order === 'ASC' ? asc(postsTable.createdAt) : desc(postsTable.createdAt),
+        )
+        .limit(limit)
+        .offset(offset),
+      queryCount,
+    ]);
+
+    return {
+      data: dataResult ?? [],
+      total: countResult[0]?.total ?? 0,
+    };
   }
 
-  async removePost(data: NewFavoritePost): Promise<FavoritePost | null> {
+  async removePost(data: FavoritePostDTO): Promise<FavoritePost | null> {
     const { user_id, post_id } = data;
 
     const [deleted] = await this.db
