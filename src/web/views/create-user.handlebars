@@ -1,0 +1,118 @@
+<div class="flex-1 flex items-center justify-center p-5">
+  <div class="w-full max-w-md animate-fade-in-up">
+    <div 
+      class="bg-card border-borderCard p-6 rounded-xl border shadow-[0_0_25px_var(--tertiary)]"
+    >
+      
+      <div class="flex flex-col items-center gap-2 mb-6">
+        <div class="bg-tertiary flex items-center justify-center p-2 rounded-2xl text-primary">
+          <svg xmlns="http://www.w3.org/2000/svg" width="40" height="40" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" class="lucide lucide-user-round-icon lucide-user-round"><circle cx="12" cy="8" r="5"/><path d="M20 21a8 8 0 0 0-16 0"/></svg>
+        </div>
+        <h1 class="text-3xl font-bold">Create Account</h1>
+        <p class="text-specialText">Sign up to manage your posts.</p>
+      </div>
+
+      
+      <form action="/create-user" method="POST" class="space-y-4">
+        <input type="hidden" name="_csrf" value="{{csrfToken}}">
+        <div>
+          <label for="name"class="block font-bold text-specialText mb-1 ml-1">
+            Name
+          </label>
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-specialText group-focus-within:text-accent transition-colors">
+              {{> icons/user}}
+            </div>
+            <input
+              id="name"
+              type="text"
+              name="name"
+              placeholder="type your username"
+              class="w-full pl-11 pr-4 py-3 bg-transparent border border-borderCard rounded-sm placeholder-specialText focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+            />
+          </div>
+        </div>
+
+        <div>
+          <label for="email" class="block font-bold text-specialText mb-1 ml-1">
+            E-mail
+          </label>
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-specialText group-focus-within:text-accent transition-colors">
+              <!-- Email icon SVG -->
+              {{> icons/email}}
+            </div>
+            <input
+              id="email"
+              type="email"
+              name="email"
+              placeholder="your@email.com"
+              class="w-full pl-11 pr-4 py-3 bg-transparent border border-borderCard rounded-sm placeholder-specialText focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+            />
+          </div>
+        </div>
+
+        <div>
+          
+          <label for="password" class="block font-bold text-specialText mb-1 ml-1">
+            Password
+          </label>
+          
+          <div class="relative group">
+            <div class="absolute inset-y-0 left-0 pl-3.5 flex items-center pointer-events-none text-specialText group-focus-within:text-accent transition-colors">
+              <!-- Password icon SVG -->
+              {{> icons/lock}}
+            </div>
+            <input
+              id="password"
+              type="password"
+              name="password"
+              placeholder="type your password"
+              class="w-full pl-11 pr-12 py-3 bg-transparent border border-borderCard rounded-sm placeholder-specialText focus:outline-none focus:ring-2 focus:ring-accent/20 focus:border-accent transition-all"
+            />
+            <button
+              type="button"
+              onclick={togglePassword()}
+              class="absolute inset-y-0 right-0 pr-3.5 flex items-center text-specialText hover:text-white"
+            >
+              <!-- SVG Eye icon -->
+              {{> icons/eye}}
+            </button>
+          </div>
+        </div>
+
+        <button
+          type="submit"
+          class="w-full bg-primary flex items-center justify-center gap-2 py-3.5 rounded-sm font-bold  hover:bg-accent"
+        >
+          Create Account
+          {{> icons/chevronRight}}
+        </button>
+      </form>
+
+      <p class="mt-8 text-center text-specialText">
+        Already have an account?
+        <a href="/login" class="text-accent font-semibold hover:underline">
+          Sign In.
+        </a>
+      </p>
+    </div>
+  </div>
+</div>
+
+<script>
+  function togglePassword() {
+    const input = document.getElementById('password');
+    input.type = input.type === 'password' ? 'text' : 'password';
+  }
+</script>
+
+<style>
+  @keyframes fadeInUp {
+    from { opacity: 0; transform: translateY(20px); }
+    to { opacity: 1; transform: translateY(0); }
+  }
+  .animate-fade-in-up {
+    animation: fadeInUp 0.5s ease-out forwards;
+  }
+</style>
