@@ -4,6 +4,9 @@ node_modules/
 .env.*
 !.env.example
 
+# Playwright Storage State
+tests/e2e/setup/user.json
+
 dist/
 build/
 
@@ -19,3 +22,10 @@ yarn-error.log*
 
 .DS_Store
 Thumbs.db
+
+# Playwright
+/test-results/
+/playwright-report/
+/blob-report/
+/playwright/.cache/
+/playwright/.auth/
