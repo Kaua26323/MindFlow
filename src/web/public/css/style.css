@@ -2,16 +2,61 @@
 
 @theme inline {
   --color-background: var(--background);
+  --color-background2: var(--background2);
   --color-primary: var(--primary);
   --color-secondary: var(--secondary);
   --color-tertiary: var(--tertiary);
+  --color-textDefault: var(--textDefault);
+  --color-specialText: var(--specialText);
+  --color-shadowColor: var(--shadowColor);
+  --color-card: var(--card);
+  --color-borderCard: var(--borderCard);
+  --color-border: var(--border);
+  --color-accent: var(--accent);
+  --color-redColor: var(--redColor);
+  --color-darkRedColor: var(--darkRedColor);
+  --color-greenColor: var(--greenColor);
+  --color-darkGreenColor: var(--darkGreenColor);
 }
 
 @layer base {
-  .root {
+  :root {
     --background: #121212;
+    --background2: #1e1e1e;
     --primary: #0e4eb2;
     --secondary: #2078cf;
     --tertiary: #011f65;
+    --textDefault: #fff;
+    --specialText: #a0a0a0;
+    --shadowColor: #2078cf;
+    --card: #020617;
+    --borderCard: #3d518c;
+    --accent: #7692ff;
+    --border: #2a2a2a;
+    --redColor: #ff0000;
+    --darkRedColor: #9e0000;
+    --greenColor: #05f54d;
+    --darkGreenColor: #057226;
   }
+}
+
+a {
+  transition: all 0.3s ease-in-out;
+}
+a:hover {
+  transform: scale(1.05);
+}
+a:active {
+  transform: scale(0.9);
+}
+
+button {
+  cursor: pointer;
+  transition: all 0.3s ease-in-out;
+}
+button:hover {
+  transform: scale(1.05);
+}
+button:active {
+  transform: scale(0.9);
 }
