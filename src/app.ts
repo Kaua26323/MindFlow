@@ -18,6 +18,8 @@ import { catchFlashMessage } from '@/web/middlewares/catchFlashMessage.ts';
 const app = express();
 const PostgresStore = connectPgSimple(session);
 
+app.set('trust proxy', 1);
+
 app.use(
   session({
     store: new PostgresStore({
