@@ -11,7 +11,7 @@
     "dev:test": "dotenv -e .env.e2e -- tsx watch src/server.ts",
     "dev:css": "tailwindcss -i ./src/web/public/css/style.css -o ./src/web/public/css/output.css --watch",
     "build:css": "tailwindcss -i ./src/web/public/css/style.css -o ./src/web/public/css/output.css --minify",
-    "build": "npm run build:css && tsc",
+    "build": "npm run build:css && tsup src/server.ts --format esm --clean",
     "start": "node dist/server.js",
     "docker:test": "docker compose --env-file .env.test up -d database_test",
     "docker:dev": "docker compose --env-file .env.development up -d database",
@@ -57,6 +57,7 @@
     "prettier": "^3.8.3",
     "supertest": "^7.2.2",
     "tailwindcss": "^4.2.4",
+    "tsup": "^8.5.1",
     "tsx": "^4.21.0",
     "typescript": "^6.0.3",
     "typescript-eslint": "^8.59.0"

@@ -12,9 +12,9 @@
     // For nodejs:
     "lib": ["esnext"],
     "types": ["node", "vitest/globals"],
-    "noEmit": true,
-    "emitDeclarationOnly": true,
-    "allowImportingTsExtensions": true,
+    //"noEmit": true,
+    //"emitDeclarationOnly": true,
+    //"allowImportingTsExtensions": true,
     // and npm install -D @types/node
 
     "paths": {
