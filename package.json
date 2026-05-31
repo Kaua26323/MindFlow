@@ -18,6 +18,7 @@
     "drizzle:generate": "dotenv -e .env.development -- drizzle-kit generate",
     "drizzle:migrate:dev": "dotenv -e .env.development -- drizzle-kit migrate",
     "drizzle:migrate:prod": "dotenv -e .env.production -- drizzle-kit migrate",
+    "drizzle:migrate:deploy": "drizzle-kit migrate",
     "test": "dotenv -e .env.test -- vitest run --bail 1",
     "test:watch": "dotenv -e .env.test -- vitest --bail 1",
     "test:unit": "dotenv -e .env.test -- vitest run --exclude 'tests/{e2e,integration}/**/*' --fileParallelism",
