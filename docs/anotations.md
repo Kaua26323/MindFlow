@@ -1,59 +1,60 @@
 # 🧠 MindFlow | Software Architecture & Design
 
-**MindFlow** é uma plataforma de microblogging minimalista projetada para capturar e organizar fluxos de pensamentos.
+**MindFlow** is a minimalist microblogging platform designed to capture and organize streams of thought.
 
 ---
 
-## 🎯 Requisitos Funcionais (RF)
+## 🎯 Functional Requirements (FR)
 
-1.  **Gestão de Identidade:** Cadastro, login e logout seguro de usuários.
-2.  **Criação de Conteúdo:** Publicação de posts via dashboard pessoal.
-3.  **CRUD de de posts:** Edição e exclusão de publicações próprias.
-4.  **Feed Global:** Visualização de posts de outros usuários em tempo real na Home Page.
-5.  **Motor de Busca:** Pesquisa textual de posts na Home Page.
-6.  **Filtros de Ordenação:** Organização por _Newest_, _Oldest_ e limpeza de filtros.
-7.  **Curadoria Pessoal:** Sistema de "Favoritos" para salvar posts de terceiros (Relação N:N).
-
----
-
-## 🏗️ Arquitetura e Padrões
-
-O projeto adota a arquitetura **MVC (Model-View-Controller)** com uma **Service Layer**, aplicando princípios de **Clean Architecture**.
-
-### Design Patterns Aplicados:
-
-- **Adapter Pattern:** Isolamento das bibliotecas de validação (**Zod**) e persistência (**Drizzle**).
-- **Repository Pattern:** Abstração da lógica de banco de dados, facilitando a troca de provedores e o mocking em testes.
+1. **Identity Management:** Secure user registration, login, and logout.
+2. **Content Creation:** Post publishing via personal dashboard.
+3. **Post CRUD:** Editing and deleting own publications.
+4. **Global Feed:** Viewing posts from other users on the Home Page.
+5. **Search Engine & Pagination:** Full-text post search with dynamic pagination system.
+6. **Sorting Filters:** Sorting by _Newest_, _Oldest_, and filter clearing.
+7. **Personal Curation:** "Favorites" system to save third-party posts (N:N relationship).
 
 ---
 
-## 🛠️ Stack Técnica
+## 🏗️ Architecture & Patterns
 
-| Categoria         | Tecnologia                          | Finalidade                                                          |
-| :---------------- | :---------------------------------- | :------------------------------------------------------------------ |
-| **Linguagem**     | **TypeScript**                      | Segurança de tipos e melhor DX                                      |
-| **Framework**     | **Express.js**                      | Servidor HTTP e gerenciamento de rotas SSR.                         |
-| **Templates**     | **Handlebars**                      | _Logic-less templates_ para garantir separação entre View e Lógica. |
-| **Estilos**       | **Tailwind CSS**                    | Estilização utilitária rápida com suporte nativo a temas.           |
-| **Database**      | **PostgreSQL**                      | Armazenamento relacional persistente.                               |
-| **ORM**           | **Drizzle**                         | _Type-safe_ e leve, mantendo a performance próxima ao SQL puro.     |
-| **Auth & Hash**   | **Argon2 + Express Session**        | Hash de senhas de última geração e gerenciamento de sessões.        |
-| **Session Store** | **connect-pg-simple**               | Persistência de sessões diretamente no PostgreSQL.                  |
-| **Security**      | **express-csrf-protection**         | Proteção contra ataques de Cross-Site Request Forgery.              |
-| **Validação**     | **Zod**                             | Validação de schemas e inferência de tipos.                         |
-| **Erros**         | **express-flash**                   | Mensagens temporárias de feedback ao usuário.                       |
-| **Ambiente**      | **dotenv**                          | Gerenciamento seguro de variáveis de ambiente.                      |
-| **Testes**        | **Vitest, Supertest e Playwright.** | Testes unitários ultrarrápidos e testes E2E para garantir a UI.     |
+The project was structured to be scalable and highly testable, adopting **MVC (Model-View-Controller) architecture** at the HTTP delivery layer, decoupled from a strict Application layer based on Clean Architecture principles.
+
+### Applied Design Patterns:
+
+- **Use Cases (Interactors):** All business rule flows are isolated in atomic, testable Use Cases at the Application layer.
+- **Adapter Pattern:** Isolation of external libraries, such as data validation (**Zod**) and hashing algorithms (**Argon2**), ensuring business rules do not depend on third-party frameworks.
+- **Repository Pattern:** Full abstraction of database logic, making it easy to swap providers and create _mocks_ (Harness) for tests.
+- **Factory Pattern:** Clean and centralized dependency injection for instantiating Controllers, Use Cases, and Repositories.
 
 ---
 
-## 🧪 Estratégia de Testes
+## 🛠️ Tech Stack
 
-Para garantir a confiabilidade do **MindFlow**, a suíte de testes cobre diferentes níveis da aplicação:
+| Category          | Technology                         | Purpose                                                                                   |
+| :---------------- | :--------------------------------- | :---------------------------------------------------------------------------------------- |
+| **Language**      | **TypeScript**                     | Type safety and improved DX (Developer Experience).                                       |
+| **Framework**     | **Express.js**                     | HTTP server and middleware pipeline orchestration.                                        |
+| **Templates**     | **Handlebars**                     | _Logic-less templates_ with custom helpers for SSR (Server-Side Rendering).               |
+| **Styles**        | **Tailwind CSS**                   | Agile, responsive, and modern utility-first styling.                                      |
+| **Database**      | **PostgreSQL**                     | Persistent and consistent relational storage.                                             |
+| **ORM**           | **Drizzle ORM**                    | _Type-safe_, low overhead, keeping performance close to raw SQL.                          |
+| **Auth & Hash**   | **Argon2 + Express Session**       | GPU attack-resistant password hashing and server-side session management.                 |
+| **Session Store** | **connect-pg-simple**              | Session persistence directly in the PostgreSQL pool.                                      |
+| **Security**      | **@dr.pogodin/csurf**              | Robust protection against CSRF (Cross-Site Request Forgery) attacks using signed cookies. |
+| **Validation**    | **Zod**                            | Request payload validation (Schemas) and strict `.env` typing.                            |
+| **Errors**        | **express-flash**                  | Management of temporary feedback messages (Success/Error) injected globally.              |
+| **Testing**       | **Vitest, Supertest & Playwright** | Full pyramid: Unit tests (logic), integration tests (HTTP routes), and E2E (user flow).   |
 
-- **Vitest:** Runner principal para testes unitários da lógica de negócio.
-- **Supertest:** Testes de integração das rotas API/HTTP, simulando requisições ao Express.
-- **Playwright:** Testes _End-to-End_ (E2E) para validar o fluxo completo do usuário no navegador.
+---
+
+## 🧪 Testing Strategy
+
+To ensure the reliability and resilience of **MindFlow**, the test suite covers the three fundamental application layers:
+
+- **Vitest:** Main runner responsible for ultra-fast execution of **Unit Tests** for Use Cases and **Integration Tests** (Repositories and Adapters).
+- **Supertest:** Validation of the web delivery layer, simulating HTTP requests to Controllers to ensure the integrity of flows and middlewares.
+- **Playwright:** _End-to-End_ (E2E) tests that simulate real end-user behavior navigating the platform, validating UI rendering and interactivity.
 
 ---
 
@@ -61,20 +62,19 @@ Para garantir a confiabilidade do **MindFlow**, a suíte de testes cobre diferen
 
 - **Background:** `#121212`
 - **Primary:** `#0E4EB2`
-- **Secondary:** `#2078CF`Aplicação:
+- **Secondary:** `#2078CF`
 - **Tertiary:** `#011F65`
 
 ---
 
 ## 🌐 Deploy
 
-- **Database:** [Neon.tech](https://neon.tech)
-- **Aplicação:** [Railway](https://railway.app)
+- **Database:** [Neon.tech](https://neon.tech) (Serverless PostgreSQL)
+- **Application:** [Render](https://render.com) (PaaS for Node.js hosting)
 
 ---
 
-### Notas de Implementação
+### Technical Implementation Notes
 
-O uso do `connect-pg-simple` é estratégico: ele garante que, mesmo que o servidor do Railway reinicie, as sessões dos usuários não sejam perdidas, pois estão salvas no banco de dados da Neon e não na memória volátil do servidor.
-
----
+1. **Environment Variable Management:** The system features strong `.env` file validation via Zod. The application aborts initialization (_fail-fast_) if critical keys (such as database URLs or encryption secrets shorter than 32 characters) are missing or incorrect.
+2. **Session Resilience:** Using `connect-pg-simple` is a strategic infrastructure decision. It ensures that even if the Railway application container is restarted or scaled, active user sessions are not lost, as they reside on the database disk (Neon) rather than in the Express server's volatile memory (RAM).
