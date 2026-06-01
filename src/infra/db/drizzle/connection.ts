@@ -1,11 +1,10 @@
 import { Pool } from 'pg';
 import { getFullEnv } from '@/env/configs.ts';
 import { drizzle } from 'drizzle-orm/node-postgres';
-import { migrate } from 'drizzle-orm/node-postgres/migrator';
 import * as schema from '@/infra/db/drizzle/schemas/schema.ts';
 
 const createConnection = () => {
-  const { DATABASE_URL, CURRENT_ENV, drizzleMigrationsFolder } = getFullEnv();
+  const { DATABASE_URL, CURRENT_ENV } = getFullEnv();
 
   const pool = new Pool({
     connectionString: DATABASE_URL,
@@ -13,12 +12,6 @@ const createConnection = () => {
   });
 
   const db = drizzle(pool, { schema });
-
-  if (['test', 'e2e'].includes(CURRENT_ENV)) {
-    migrate(db, { migrationsFolder: drizzleMigrationsFolder })
-      .then(() => console.log('✅ Test database migrated'))
-      .catch((err) => console.error('❌ Migration failed', err));
-  }
 
   return { db, pool };
 };
