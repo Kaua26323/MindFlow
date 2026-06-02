@@ -1,6 +1,6 @@
 # 🧠 MindFlow
 
-![Alt text](src/web/public/screenshots/preview.png)
+![Alt text](docs/screenshots/preview.png)
 
 ## 💻 About the Project
 
